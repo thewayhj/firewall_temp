@@ -47,7 +47,7 @@ int firewall_ip_policy_load(int key_num){
     int shm_id;
     struct fire_ip *shmaddr;
     
-    if((fp = fopen("/home/hello/lsp/network/term/firewall_temp/firewall_policy_port_list","r"))==NULL){
+    if((fp = fopen("/Users/Minwoo/Documents/workspace/git/firewall_temp/firewall_policy_ip_list","r"))==NULL){
         perror("error");
         exit(1);
     }
