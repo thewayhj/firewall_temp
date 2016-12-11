@@ -11,7 +11,6 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-
 #include "read_packet.h"
 #include "my_trace.h"
 #include "firewall.h"
@@ -41,24 +40,75 @@ int print_menu(){
             switch (choice) {
                 case '0':
                 case '1':
-                    
                     return 121;
                     break;
                 case '3':
                     puts("1. IP");
                     puts("2. PORT");
-                    puts("3. ");
+                    puts("3. FLAGS");
                     puts("0. Back");
                     scanf(" %c",&choice);
                     switch (choice) {
                         case '1':
-                            return 131;
+                            puts("1. ADD");
+                            puts("2. DELETE");
+                            puts("3. LOOK");
+                            puts("0. Back");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1311;
+                                    break;
+                                case '2':
+                                    return 1312;
+                                    break;
+                                case '3':
+                                    return 1313;
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case '2':
-                            return 132;
+                            puts("1. ADD");
+                            puts("2. DELETE");
+                            puts("3. LOOK");
+                            puts("0. Back");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1321;
+                                    break;
+                                case '2':
+                                    return 1322;
+                                    break;
+                                case '3':
+                                    return 1233;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
                             break;
                         case '3':
-                            return 133;
+                            puts("1. ADD");
+                            puts("2. DELETE");
+                            puts("3. LOOK");
+                            puts("0. Back");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1331;
+                                    break;
+                                case '2':
+                                    return 1332;
+                                    break;
+                                case '3':
+                                    return 1333;
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         default:
                             break;
@@ -99,11 +149,27 @@ int main(){
                 case 211:
                     my_trace("www.google.com");
                     break;
-                case 131:
+                case 1311:
+                    firewall_ip_policy_add(shmid[0]);
+                    firewall_ip_policy_write(shmid[0]);
+                    break;
+                case 1312:
+                    firewall_ip_policy_print(shmid[0]);
+                    firewall_ip_policy_del(shmid[0]);
+                    firewall_ip_policy_write(shmid[0]);
+                    break;
+                case 1313:
                     firewall_ip_policy_print(shmid[0]);
                     break;
-                case 132:
+                case 1321:
+                    firewall_port_policy_add(shmid[1]);
+                    firewall_port_policy_write(shmid[1]);
+                case 1322:
                     firewall_port_policy_print(shmid[1]);
+                case 1323:
+                    firewall_port_policy_print(shmid[1]);
+                    firewall_port_policy_del(shmid[1]);
+                    firewall_port_policy_write(shmid[1]);
                     break;
                 default:
                     break;
