@@ -24,7 +24,6 @@ void tv_sub(struct timeval *, struct timeval *);
 
 struct in_addr addr;
 struct timeval *tvsend, tvrecv;
-char log[BUFSIZ];
 char rbuf[1500];
 char error_1[] =" usage : ping domain_name";
 char error_2[] =" Wrong Addrress";
@@ -45,58 +44,32 @@ struct sockaddr_in sarecv;
 struct hostent *host;
 int salen;
 
-int main(int argc, char *argv[]) {
-	
-	
-	LOG = fopen("log","a");
+void my_trace(char *argv) {
+
 	time(&current_time);
-	strcpy(log,strtok(ctime(&current_time),"\n"));
 	
-	
-	if(argc < 2) {
-		printf("%s\n",error_1);
-		strcat(log,error_1);
-		strcat(log,"\n");
-		fputs(log,LOG);
-		fclose(LOG);
-		exit(-1);
-   	}
 	
 	bzero((char *)&sasend, sizeof(sasend));
 	sasend.sin_family = AF_INET;
-	for(int i=1;;i++){
-		if(argv[i]==NULL)
-			break;
-		else if(strcmp(argv[i],"-m")==0){
-			hops = atoi(argv[++i]);	
-		}
-		else if(INADDR_NONE == inet_addr(argv[i])){
-			if((host = gethostbyname(argv[i])) == NULL){
-				printf("%s\n",error_2);
-				strcat(log,error_2);
-				strcat(log," Input : ");				
-				strcat(log,argv[i]);
-				strcat(log,"\n");
-				fputs(log,LOG);
-				fclose(LOG);
-				exit(-1);
-			}
-			else{
-				memcpy(&addr.s_addr,host->h_addr_list[0],4);
-				sasend.sin_addr.s_addr = inet_addr(inet_ntoa(addr));
-			}
-		}
-		else
-		     sasend.sin_addr.s_addr = inet_addr(argv[i]);
-	}
+    if(INADDR_NONE == inet_addr(argv)){
+        if((host = gethostbyname(argv)) == NULL){
+            printf("%s\n",error_2);
+            exit(-1);
+        }
+        else{
+            memcpy(&addr.s_addr,host->h_addr_list[0],4);
+            sasend.sin_addr.s_addr = inet_addr(inet_ntoa(addr));
+        }
+    }
+    else
+         sasend.sin_addr.s_addr = inet_addr(argv);
+	
 	gettimeofday((struct timeval *)tvsend, NULL);
 	
 	salen = sizeof(sasend);
 	pid = getpid() & 0xffff;      //ICMP ID (16 bits)
 	
-	printf("Dest : %s\n",inet_ntoa(sasend.sin_addr));	
-	strcat(log," Dest:");	
-	strcat(log,inet_ntoa(sasend.sin_addr));
+	printf("Dest : %s\n",inet_ntoa(sasend.sin_addr));
 	printf(" Hops\t   Address\t   rtt\n");
 	handlePing();
 }
@@ -142,20 +115,11 @@ void handlePing(void) {
 		if(iph->ip_src.s_addr == sasend.sin_addr.s_addr||ttl>hops){
 			if(ttl>hops){
 				printf("   Too many hops\n");
-				strcat(log," Too many hops");		
 				sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 				printf("%s",rbuf);
-				strcat(log,rbuf);
-				fputs(log,LOG);
-				fclose(LOG);
-				exit(0);
 			}	
 			sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 			printf("%s",rbuf);
-			strcat(log,rbuf);
-			fputs(log,LOG);
-			fclose(LOG);
-			exit(0);
 		}	
 	}
 }
@@ -163,12 +127,8 @@ void sig_alrm(int signo) {
 	printf("\tNo reply\n");
 	if(ttl>hops){
 		printf("   Too many hops\n");
-		strcat(log," Too many hops");		
 		sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 		printf("%s",rbuf);
-		strcat(log,rbuf);
-		fputs(log,LOG);
-		fclose(LOG);
 		exit(0);
 	}
 	printf("%3d:",ttl);

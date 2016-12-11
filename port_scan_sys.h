@@ -27,7 +27,7 @@ struct pseudohdr {
 	unsigned short length;
 };
 
-int main(int argc, char *argv[])
+void port_scan_sys(int argc, char *argv[])
 {
 	unsigned long target;
 	int portNum;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 		h = gethostbyname(argv[1]);
 		if(!h) {
 			printf("gethostbyname error\n");
-			return 4;
+			//return 4;
 		}
 		target = ((struct in_addr*)h->h_addr)->s_addr;
 	}

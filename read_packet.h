@@ -11,7 +11,7 @@
 void print_ip(struct ip *);
 void print_tcp(struct tcphdr *);
 
-int main(){
+int read_packet(){
 	int sd;
 	int len;
 
@@ -41,7 +41,7 @@ int main(){
 
 		rx_iph = (struct ip *)(rx_packet);
 		rx_tcph = (struct tcphdr *)(rx_packet + rx_iph->ip_hl * 4);
-
+        
 		print_ip(rx_iph);
 		print_tcp(rx_tcph);
 	}
