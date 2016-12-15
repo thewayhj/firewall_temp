@@ -44,7 +44,7 @@ struct sockaddr_in sarecv;
 struct hostent *host;
 int salen;
 
-void my_trace(int argc, char *argv) {
+void my_trace(char *argv) {
 
 	time(&current_time);
 	
@@ -86,7 +86,7 @@ void handlePing(void) {
 
 	signal(SIGALRM, sig_alrm);
 	if((sd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-      printf("socket open error\n");
+      printf("socket open error!!\n");
       exit(-1);
     }
 	

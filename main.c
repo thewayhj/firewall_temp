@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-
+#include <string.h>
 #include "read_packet.h"
 #include "read_packet_file.h"
 #include "my_trace.h"
@@ -21,41 +21,58 @@
 int print_menu(){
     
     char choice=0;
-    
-    puts("1. Firewall");
-    puts("2. Traceroute");
-    puts("3. ");
-    puts("4. ");
-    puts("0. exit");
+    puts("\n====== MENU =====");
+    puts("| 1. Firewall   |");
+    puts("| 2. Traceroute |");
+    puts("| 3.            |");
+    puts("| 4.            |");
+    puts("| 0. exit       |");
+    puts("=================");
+    printf("Choice Number : ");	
     scanf(" %c",&choice);
     switch (choice) {
         case '0':
             exit(0);
             break;
         case '1':
-            puts("1. Read Packet File");
-            puts("2. Block list");
-            puts("3. Firewall Policy");
-            puts("4.");
-            puts("0. back");
+	    puts("\n====== Firewall =======");
+            puts("| 1. Read Packet File |");
+            puts("| 2. Block list       |");
+            puts("| 3. Firewall Policy  |");
+            puts("| 4.                  |");
+            puts("| 0. back             |");
+    	    puts("=======================");
+            printf("Choice Number : ");
             scanf(" %c",&choice);
             switch (choice) {
                 case '0':
+		    return print_menu();
                 case '1':
-                    return 121;
+                    return 11;
                     break;
+		case '2':
+		    return 12; // block list
+
+
+
                 case '3':
-                    puts("1. IP");
-                    puts("2. PORT");
-                    puts("3. FLAGS");
-                    puts("0. Back");
+		    puts("\n=== Firewall Policy ===");
+                    puts("| 1. IP               |");
+                    puts("| 2. PORT             |");
+                    puts("| 3. FLAGS            |");
+                    puts("| 0. MENU             |");
+		    puts("=======================");
+		    printf("Choice Number : ");
                     scanf(" %c",&choice);
                     switch (choice) {
                         case '1':
-                            puts("1. ADD");
-                            puts("2. DELETE");
-                            puts("3. LOOK");
-                            puts("0. Back");
+			    puts("\n==== IP =====");
+                            puts("| 1. ADD    |");
+                            puts("| 2. DELETE |");
+                            puts("| 3. LOOK   |");
+                            puts("| 0. MENU   |");
+			    puts("=============");
+			    printf("Choice Number : ");
                             scanf(" %c",&choice);
                             switch (choice) {
                                 case '1':
@@ -72,10 +89,13 @@ int print_menu(){
                             }
                             break;
                         case '2':
-                            puts("1. ADD");
-                            puts("2. DELETE");
-                            puts("3. LOOK");
-                            puts("0. Back");
+			    puts("\n==== PORT =====");
+                            puts("| 1. ADD      |");
+                            puts("| 2. DELETE   |");
+                            puts("| 3. LOOK     |");
+                            puts("| 0. MENU     |");
+			    puts("===============");
+			    printf("Choice Number : ");
                             scanf(" %c",&choice);
                             switch (choice) {
                                 case '1':
@@ -93,10 +113,13 @@ int print_menu(){
                             
                             break;
                         case '3':
-                            puts("1. ADD");
-                            puts("2. DELETE");
-                            puts("3. LOOK");
-                            puts("0. Back");
+			    puts("\n===== FLAGS ======");
+                            puts("| 1. ADD         |");
+                            puts("| 2. DELETE      |");
+                            puts("| 3. LOOK        |");
+                            puts("| 0. MENU        |");
+			    puts("==================");
+			    printf("Choice Number : ");
                             scanf(" %c",&choice);
                             switch (choice) {
                                 case '1':
@@ -122,7 +145,7 @@ int print_menu(){
             }
             break;
         case '2':
-            return 211;
+            return 2;
             break;
             
         default:
@@ -132,8 +155,6 @@ int print_menu(){
     
     return 0;
 }
-
-#define KEY 1234
 
 int main(){
     
@@ -148,10 +169,10 @@ int main(){
         
         while(1){
             switch (print_menu()) {
-                case 121:
+                case 11:
                     read_packet_file();
                     break;
-                case 211:
+                case 2:
                     my_trace("www.google.com");
                     break;
                 case 1311:
