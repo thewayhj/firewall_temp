@@ -24,7 +24,7 @@ int print_menu(){
     puts("2. Traceroute");
     puts("3. ");
     puts("4. ");
-    puts("0.exit");
+    puts("0. exit");
     scanf(" %c",&choice);
     switch (choice) {
         case '0':

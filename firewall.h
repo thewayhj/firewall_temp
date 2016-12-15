@@ -13,7 +13,7 @@
 #define SHMAT_FAIL "shmat failed"
 #define SHMDT_FAIL "shmdt failed"
 
-#define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
+#define PATH "/home/hello/lsp/network/term/firewall_temp/"
 #define IP_POLICY_FILE_NAME PATH"firewall_policy_ip_list"
 #define PORT_POLICY_FILE_NAME PATH"firewall_policy_port_list"
 #define FLAGS_POLICY_FILE_NAME PATH"firewall_policy_flag_list"
