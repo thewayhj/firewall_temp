@@ -49,19 +49,23 @@ int read_packet(){
 }
 
 void print_ip(struct ip *iph){
-	printf("[IP HEADER] VER : %d HL : %2u Protocol : %3u",iph->ip_v, iph->ip_hl, iph->ip_p);
-	printf("SRC IP: %15s ", inet_ntoa(*(struct in_addr *)&iph->ip_src));
-	printf("DEST IP: %15s \n", inet_ntoa(*(struct in_addr *)&iph->ip_dst));
+    puts("[IP HEADER]");
+    printf("VER : %d HL : %u TOS : %d TOL: %d \n",iph->ip_v, iph->ip_hl,iph->ip_tos, iph->ip_len);
+    printf("ID : %d TTL: %d Protocol : %u CheckSum = %d\n",iph->ip_id, iph->ip_ttl,iph->ip_sum,iph->ip_p);
+	printf("SRC IP: %s ", inet_ntoa(*(struct in_addr *)&iph->ip_src));
+	printf("DST IP: %s \n", inet_ntoa(*(struct in_addr *)&iph->ip_dst));
+    
 }
 
 void print_tcp(struct tcphdr *tcph){
-	printf("[TCP HEADER] src port: %5u dest port : %5u ",ntohs(tcph->th_sport), ntohs(tcph->th_dport));
+    puts("[TCP HEADER]");
+	printf("SRC PORT: %d DST PORT : %d\n",tcph->th_sport, tcph->th_dport);
 
-	(tcph->th_flags == TH_FIN)?printf("U"):printf("-");
-	(tcph->th_flags == 1)?printf("A"):printf("-");
-	(tcph->th_flags == 1)?printf("P"):printf("-");
-	(tcph->th_flags == 1)?printf("R"):printf("-");
-	(tcph->th_flags == 1)?printf("S"):printf("-");
-	(tcph->th_flags == 1)?printf("F"):printf("-");
+	(tcph->th_flags&TH_URG)?printf("U"):printf("-");
+	(tcph->th_flags&TH_ACK)?printf("A"):printf("-");
+	(tcph->th_flags&TH_PUSH)?printf("P"):printf("-");
+	(tcph->th_flags&TH_RST)?printf("R"):printf("-");
+	(tcph->th_flags&TH_SYN)?printf("S"):printf("-");
+	(tcph->th_flags&TH_FIN)?printf("F"):printf("-");
 	printf("\n\n");
 }

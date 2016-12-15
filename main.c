@@ -12,8 +12,10 @@
 #include <sys/shm.h>
 
 #include "read_packet.h"
+#include "read_packet_file.h"
 #include "my_trace.h"
 #include "firewall.h"
+
 
 
 int print_menu(){
@@ -31,7 +33,7 @@ int print_menu(){
             exit(0);
             break;
         case '1':
-            puts("1. Monitoring");
+            puts("1. Read Packet File");
             puts("2. Block list");
             puts("3. Firewall Policy");
             puts("4.");
@@ -146,6 +148,9 @@ int main(){
         
         while(1){
             switch (print_menu()) {
+                case 121:
+                    read_packet_file();
+                    break;
                 case 211:
                     my_trace("www.google.com");
                     break;
