@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <string.h>
 
 #include "read_packet.h"
 #include "read_packet_file.h"
@@ -140,7 +141,8 @@ int main(){
     pid_t pid;
     pid = fork();
     int shmid[3];
-    
+    struct packet_st *pt;
+    pt = (struct packet_st *)malloc(sizeof(struct packet_st)*10);
     
     firewall_load(shmid);
     // parent proccess
@@ -149,7 +151,8 @@ int main(){
         while(1){
             switch (print_menu()) {
                 case 121:
-                    read_packet_file();
+                    read_packet_file(pt);
+                    firewall(pt,shmid);
                     break;
                 case 211:
                     my_trace("www.google.com");
