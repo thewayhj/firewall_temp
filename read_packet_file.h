@@ -23,7 +23,10 @@ struct packet_st{
     struct tcphdr rx_tcph;
 };
 
-void read_packet_file(struct packet_st *pt_st){
+
+#include <netinet/ip.h>
+#include <stdlib.h>
+void read_packet_file(){
     FILE *fp;
     char packet[BUFSIZ];
     char *temp;
@@ -36,6 +39,11 @@ void read_packet_file(struct packet_st *pt_st){
         int j=20;
         struct ip rx_iph;
         struct tcphdr rx_tcph;
+        
+        struct packet_st *pt_st;
+        
+        pt_st = (struct packet_st *)malloc(sizeof(struct packet_st)*10);
+        
         int headerlength;
         atoi(strtok(packet,"|"));
         while(i<4){

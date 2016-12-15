@@ -13,7 +13,11 @@
 #define SHMAT_FAIL "shmat failed"
 #define SHMDT_FAIL "shmdt failed"
 
+#ifdef HEE
+#define PATH ""
+#else
 #define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
+#endif
 #define IP_POLICY_FILE_NAME PATH"firewall_policy_ip_list"
 #define PORT_POLICY_FILE_NAME PATH"firewall_policy_port_list"
 #define FLAGS_POLICY_FILE_NAME PATH"firewall_policy_flag_list"
