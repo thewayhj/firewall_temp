@@ -8,8 +8,21 @@
 
 #ifndef read_packet_file_h
 #define read_packet_file_h
-#define PATH "/home/hello/lsp/network/term/firewall_temp/"
+
+#ifdef HEE
+#define PATH ""
+#else
+#define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
+#endif
 #define FILE_NAME PATH"sample.txt"
+
+#include <netinet/ip.h>
+
+struct packet_st{
+    struct ip rx_iph;
+    struct tcphdr rx_tcph;
+};
+
 
 #include <netinet/ip.h>
 #include <stdlib.h>
@@ -19,12 +32,18 @@ void read_packet_file(){
     char *temp;
     char temp2[BUFSIZ];
     fp = fopen(FILE_NAME,"r");
-    while(fgets(packet,BUFSIZ,fp)){
+    int k=0;
+    while(fgets(packet,BUFSIZ,fp)!=NULL){
         
         int i=0;
         int j=20;
         struct ip rx_iph;
         struct tcphdr rx_tcph;
+        
+        struct packet_st *pt_st;
+        
+        pt_st = (struct packet_st *)malloc(sizeof(struct packet_st)*10);
+        
         int headerlength;
         atoi(strtok(packet,"|"));
         while(i<4){
@@ -191,6 +210,10 @@ void read_packet_file(){
                 }
             i++;
         }
+        
+        (pt_st+k)->rx_iph = rx_iph;
+        (pt_st+k)->rx_tcph = rx_tcph;
+        k++;
     }
 }
 #endif /* read_packet_file_h */

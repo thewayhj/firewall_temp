@@ -13,7 +13,11 @@
 #define SHMAT_FAIL "shmat failed"
 #define SHMDT_FAIL "shmdt failed"
 
-#define PATH "/home/hello/lsp/network/term/firewall_temp/"
+#ifdef HEE
+#define PATH ""
+#else
+#define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
+#endif
 #define IP_POLICY_FILE_NAME PATH"firewall_policy_ip_list"
 #define PORT_POLICY_FILE_NAME PATH"firewall_policy_port_list"
 #define FLAGS_POLICY_FILE_NAME PATH"firewall_policy_flag_list"
@@ -232,6 +236,18 @@ void firewall_port_policy_write(int shm_id){
         exit(1);
     }
 }
+void fiewall_port_policy_get(int shmid){
+    struct fire_port *shmaddr;
+    if((shmaddr=shmat(shmid, (void *)0, 0)) == (void *)-1) {
+        perror(SHMAT_FAIL);
+        exit(1);
+    }
+    if(shmdt(shmaddr) == -1) {
+        perror(SHMDT_FAIL);
+        exit(1);
+    }
+}
+
 void firewall_port_policy_add(int shm_id){
     struct fire_port *shmaddr;
     int i=0;
@@ -295,4 +311,40 @@ void firewall_port_policy_print(int shm_id){
         perror(SHMDT_FAIL);
         exit(1);
     }
+}
+
+void firewall_ip(int shmid){
+    
+    
+}
+void firewall_tcp(struct tcphdr *header,int shmid){
+    int i=0;
+    
+    struct fire_port *shmaddr;
+    if((shmaddr=shmat(shmid, (void *)0, 0)) == (void *)-1) {
+        perror(SHMAT_FAIL);
+        exit(1);
+    }
+    while(shmaddr->s_port != -1) {
+        if((shmaddr+i)->s_port<=header->th_dport && header->th_dport <= (shmaddr+i)->e_port){
+            
+            
+        }
+        i++;
+    }
+    if(shmdt(shmaddr) == -1) {
+        perror(SHMDT_FAIL);
+        exit(1);
+    }
+    
+}
+void firewall_flags(struct tcphdr header,int shmid){
+    
+    
+    
+}
+void firewall(struct packet_st *pt,int *shmid){
+    firewall_ip(shmid[0]);
+    firewall_tcp(&pt->rx_tcph,shmid[1]);
+    firewall_flags(pt->rx_tcph,shmid[2]);
 }

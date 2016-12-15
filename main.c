@@ -161,7 +161,8 @@ int main(){
     pid_t pid;
     pid = fork();
     int shmid[3];
-    
+    struct packet_st *pt;
+    pt = (struct packet_st *)malloc(sizeof(struct packet_st)*10);
     
     firewall_load(shmid);
     // parent proccess
