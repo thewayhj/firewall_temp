@@ -10,7 +10,7 @@
 #define read_packet_file_h
 
 #ifdef HEE
-#define PATH ""
+#define PATH "/home/hello/lsp/network/term/firewall_temp/"
 #else
 #define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
 #endif
@@ -65,7 +65,7 @@ void read_packet_file(int *shmid){
         atoi(strtok(packet,"|"));
         while(i<4){
             switch (i) {
-                case 0:
+                case 0: // ethernet
                     strtok(NULL,"|");
                     strtok(NULL,"|");
                     strtok(NULL,"|");
@@ -82,7 +82,7 @@ void read_packet_file(int *shmid){
                     strtok(NULL,"|");
                     strtok(NULL,"|");
                     break;
-                case 1:
+                case 1: // ip header
                     
                     temp = strtok(NULL,"|");
                     
@@ -137,7 +137,7 @@ void read_packet_file(int *shmid){
                     strcat(temp2,temp);
                     temp = strtok(NULL,"|");
                     strcat(temp2,temp);
-                    puts(temp2);
+
                     rx_iph.ip_dst.s_addr = htonl((int)strtol(temp2,NULL,16));
                     
                     while(j < rx_iph.ip_hl*4){
@@ -146,7 +146,7 @@ void read_packet_file(int *shmid){
                     }
                     print_ip(&rx_iph);
                     break;
-                case 2:
+                case 2: // tcp header
                     temp = strtok(NULL,"|");
                     strcpy(temp2,temp);
                     temp = strtok(NULL,"|");
@@ -218,7 +218,7 @@ void read_packet_file(int *shmid){
                     }
                     print_tcp(&rx_tcph);
                     break;
-                case 3:
+                case 3: // data
                     strcpy(temp2,"");
                     while((temp = strtok(NULL,"|"))!=NULL){
                         strcat(temp2,temp);
@@ -235,15 +235,17 @@ void read_packet_file(int *shmid){
         int t = firewall(pt_st+k, shmid);
         
         if(t&1){
-            printf("IP block\n");
+            
+            printf("IP block\n\n");
+            
         }
         if(t&2) {
             
-            printf("PORT block\n");
+            printf("PORT block\n\n");
         }
         if(t&4) {
             
-            printf("FLAGS block\n");
+            printf("FLAGS block\n\n");
         }
         k++;
         

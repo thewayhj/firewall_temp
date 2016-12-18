@@ -16,8 +16,6 @@
 #include "my_trace.h"
 #include "firewall.h"
 
-
-
 int print_menu(){
     
     char choice=0;
@@ -32,6 +30,7 @@ int print_menu(){
     scanf(" %c",&choice);
     switch (choice) {
         case '0':
+	    printf("Exit Program\n");
             exit(0);
             break;
         case '1':
@@ -147,6 +146,7 @@ int print_menu(){
             puts("| 4. History          |");
             puts("| 0. back             |");
             puts("=======================");
+	printf("Choice Number : ");
             scanf(" %c",&choice);
             switch (choice) {
                 case '1':
@@ -210,9 +210,10 @@ int main(){
                         printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_dst));
                         i++;
                     }
+		    printf("choice block ip : ");
                     scanf("%d",&choice);
                     
-                    my_trace(inet_ntoa((pt+i-1)->rx_iph.ip_dst));
+                    my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_dst));
                     break;
                 case 1311:
                     firewall_ip_policy_add(shmid[0]);
@@ -238,22 +239,17 @@ int main(){
                     break;
                 default:
                     break;
-            }
-            
+            }            
         }
     }
     // child proccess
     else if(pid == 0) {
-        
-        // read_packet();
-        
+       // read_packet();        
     }
     else {
         
         
         
     }
-    
-    
-}
-
+        
+}     
