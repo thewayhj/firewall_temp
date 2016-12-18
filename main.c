@@ -22,8 +22,6 @@ int print_menu(){
     puts("\n====== MENU =====");
     puts("| 1. Firewall   |");
     puts("| 2. Traceroute |");
-    puts("| 3.            |");
-    puts("| 4.            |");
     puts("| 0. exit       |");
     puts("=================");
     printf("Choice Number : ");
@@ -38,7 +36,6 @@ int print_menu(){
             puts("| 1. Read Packet File |");
             puts("| 2. Block list       |");
             puts("| 3. Firewall Policy  |");
-            puts("| 4.                  |");
             puts("| 0. back             |");
             puts("=======================");
             printf("Choice Number : ");
@@ -56,7 +53,6 @@ int print_menu(){
                     puts("\n=== Firewall Policy ===");
                     puts("| 1. IP               |");
                     puts("| 2. PORT             |");
-                    puts("| 3. FLAGS            |");
                     puts("| 0. Back             |");
                     puts("=======================");
                     printf("Choice Number : ");
@@ -102,37 +98,16 @@ int print_menu(){
                                     return 1322;
                                     break;
                                 case '3':
-                                    return 1233;
+                                    return 1323;
                                     break;
                                 default:
+				    puts("Wrong input");
                                     break;
                             }
                             
                             break;
-                        case '3':
-                            puts("\n===== FLAGS ======");
-                            puts("| 1. ADD         |");
-                            puts("| 2. DELETE      |");
-                            puts("| 3. LOOK        |");
-                            puts("| 0. MENU        |");
-                            puts("==================");
-                            printf("Choice Number : ");
-                            scanf(" %c",&choice);
-                            switch (choice) {
-                                case '1':
-                                    return 1331;
-                                    break;
-                                case '2':
-                                    return 1332;
-                                    break;
-                                case '3':
-                                    return 1333;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
                         default:
+                          
                             break;
                     }
                     break;
@@ -149,6 +124,8 @@ int print_menu(){
 	printf("Choice Number : ");
             scanf(" %c",&choice);
             switch (choice) {
+		case '0':
+                    return print_menu();
                 case '1':
                     return 21;
                     break;
@@ -159,15 +136,17 @@ int print_menu(){
                     return 23;
                     break;
                 default:
+		    puts("Wrong input");
                     break;
             }// block list
             break;
             
             
-        case '3':
+     //   case '3':
             
-            break;
+       //     break;
         default:
+	    puts("Wrong input");
             break;
     }
     return 0;
@@ -196,7 +175,7 @@ int main(){
                     firewall_block_list_print();
                     break;
                 case 21:
-		    printf("Enter IP or DNS : ");
+		    printf("Enter IP or Domain Name : ");
                     scanf("%s",input);
                     my_trace(input);
                     break;
@@ -231,12 +210,14 @@ int main(){
                 case 1321:
                     firewall_port_policy_add(shmid[1]);
                     firewall_port_policy_write(shmid[1]);
+		    break;
                 case 1322:
-                    firewall_port_policy_print(shmid[1]);
-                case 1323:
                     firewall_port_policy_print(shmid[1]);
                     firewall_port_policy_del(shmid[1]);
                     firewall_port_policy_write(shmid[1]);
+		    break;
+                case 1323:
+                    firewall_port_policy_print(shmid[1]);
                     break;
                 default:
                     break;

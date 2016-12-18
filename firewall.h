@@ -61,6 +61,7 @@ int firewall_ip_policy_load(int key_num){
         perror("error");
         exit(1);
     }
+
     if ( -1 == ( shm_id = shmget( (key_t)key_num, sizeof(struct fire_ip) * 10, IPC_CREAT|0666)))
     {
         printf( "공유 메모리 생성 실패\n");
@@ -104,6 +105,9 @@ void firewall_ip_policy_print(int shm_id){
         printf("%d.%u %d\n",i+1,(shmaddr+i)->addr.s_addr,(shmaddr+i)->domain);
         i++;
     }
+    if(i==0){
+	puts("Empty list");
+    }
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
         exit(1);
@@ -123,9 +127,9 @@ void firewall_ip_policy_add(int shm_id){
         i++;
     }
     
-    puts("input ip");
+    printf("input ip : ");
     scanf("%s",input);
-    puts("input domain");
+    printf("input domain : ");
     scanf("%d",&temp);
     
     (shmaddr+i)->addr.s_addr = inet_addr(input);
@@ -146,6 +150,7 @@ void firewall_ip_policy_del(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
+    printf("Choice Number : ");
     scanf("%d",&num);
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
@@ -236,6 +241,7 @@ void firewall_port_policy_write(int shm_id){
         perror(SHMDT_FAIL);
         exit(1);
     }
+    fclose(fp);
 }
 void fiewall_port_policy_get(int shmid){
     struct fire_port *shmaddr;
@@ -263,9 +269,9 @@ void firewall_port_policy_add(int shm_id){
         i++;
     }
     
-    puts("input port 1");
+    printf("input port 1 : ");
     scanf("%d",&temp[0]);
-    puts("input port 2");
+    printf("input port 2 : ");
     scanf("%d",&temp[1]);
     
     (shmaddr+i)->s_port = temp[0];
@@ -286,6 +292,7 @@ void firewall_port_policy_del(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
+    printf("Choice Number : ");
     scanf("%d",&num);
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
@@ -305,8 +312,11 @@ void firewall_port_policy_print(int shm_id){
         exit(1);
     }
     while((shmaddr+i)->s_port != -1){
-        printf("%d %d\n",(shmaddr+i)->s_port,(shmaddr+i)->e_port);
+        printf("%d) %d %d\n",i+1,(shmaddr+i)->s_port,(shmaddr+i)->e_port);
         i++;
+    }
+    if(i==0){
+	puts("Empty Port list");
     }
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
@@ -323,8 +333,6 @@ int firewall_ip(struct ip *header,int shmid){
         exit(1);
     }
     while((shmaddr+i)->domain != -1) {
-        puts(inet_ntoa((shmaddr+i)->addr));
-        puts(inet_ntoa(header->ip_src));
         if(header->ip_src.s_addr>>(32-(shmaddr+i)->domain) == (shmaddr+i)->addr.s_addr>>(32-(shmaddr+i)->domain)){
             
             return 1;
@@ -335,8 +343,6 @@ int firewall_ip(struct ip *header,int shmid){
         perror(SHMDT_FAIL);
         exit(1);
     }
-    return 0;
-
     return 0;
 }
 int firewall_tcp(struct tcphdr *header,int shmid){
@@ -374,12 +380,12 @@ int firewall_flags(struct tcphdr *tcph,int shmid){
 			
 	}
 }
+
 int firewall(struct packet_st *pt,int *shmid){
-    time_t timer;
     struct tm *t;
+    time_t timer;	
     
-    timer = time(NULL);
-    
+    timer = time(NULL);    
     t = localtime(&timer);
     
     FILE *fp;
@@ -391,7 +397,7 @@ int firewall(struct packet_st *pt,int *shmid){
     block+=firewall_flags(&pt->rx_tcph,shmid[2]);
     
     if(block != 0) {
-        fprintf(fp,"%d.%d.%d %d:%d:%d\t%s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
+        fprintf(fp,"%d.%d.%d %d:%d:%d\t%s %d\n",t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
         
     }
     fclose(fp);

@@ -29,7 +29,7 @@
 #endif /* firewall_h */
 
 struct fire_ip{
-    u_long addr;
+    struct in_addr addr;
     int domain;
 };
 
@@ -61,6 +61,7 @@ int firewall_ip_policy_load(int key_num){
         perror("error");
         exit(1);
     }
+
     if ( -1 == ( shm_id = shmget( (key_t)key_num, sizeof(struct fire_ip) * 10, IPC_CREAT|0666)))
     {
         printf( "공유 메모리 생성 실패\n");
@@ -75,7 +76,7 @@ int firewall_ip_policy_load(int key_num){
         struct fire_ip fip;
         
         fip.domain = domain;
-        fip.addr = inet_addr(temp);
+        fip.addr.s_addr = inet_addr(temp);
         
         *(shmaddr+i++) = fip;
         
@@ -83,7 +84,7 @@ int firewall_ip_policy_load(int key_num){
     struct fire_ip fip;
     
     fip.domain = -1;
-    fip.addr = -1;
+    fip.addr.s_addr = -1;
     
     *(shmaddr+i++) = fip;
     if(shmdt(shmaddr) == -1) {
@@ -100,9 +101,12 @@ void firewall_ip_policy_print(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
-        printf("%d.%lu %d\n",i+1,(shmaddr+i)->addr,(shmaddr+i)->domain);
+    while((shmaddr+i)->addr.s_addr != -1) {
+        printf("%d.%u %d\n",i+1,(shmaddr+i)->addr.s_addr,(shmaddr+i)->domain);
         i++;
+    }
+    if(i==0){
+	puts("Empty list");
     }
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
@@ -119,19 +123,19 @@ void firewall_ip_policy_add(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
+    while((shmaddr+i)->addr.s_addr != -1) {
         i++;
     }
     
-    puts("input ip");
+    printf("input ip : ");
     scanf("%s",input);
-    puts("input domain");
+    printf("input domain : ");
     scanf("%d",&temp);
     
-    (shmaddr+i)->addr = inet_addr(input);
+    (shmaddr+i)->addr.s_addr = inet_addr(input);
     (shmaddr+i)->domain = temp;
     i++;
-    (shmaddr+i)->addr = -1;
+    (shmaddr+i)->addr.s_addr = -1;
     (shmaddr+i)->domain = -1;
     
     if(shmdt(shmaddr) == -1) {
@@ -146,11 +150,12 @@ void firewall_ip_policy_del(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
+    printf("Choice Number : ");
     scanf("%d",&num);
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
     }
-    while((shmaddr+num++)->addr != -1);
+    while((shmaddr+num++)->addr.s_addr != -1);
     
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
@@ -211,7 +216,7 @@ void firewall_ip_policy_write(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
+    while((shmaddr+i)->addr.s_addr != -1) {
         fprintf(fp,"%lu %d\n",(shmaddr+i)->addr,(shmaddr+i)->domain);
         i++;
     }
@@ -236,6 +241,7 @@ void firewall_port_policy_write(int shm_id){
         perror(SHMDT_FAIL);
         exit(1);
     }
+    fclose(fp);
 }
 void fiewall_port_policy_get(int shmid){
     struct fire_port *shmaddr;
@@ -263,9 +269,9 @@ void firewall_port_policy_add(int shm_id){
         i++;
     }
     
-    puts("input port 1");
+    printf("input port 1 : ");
     scanf("%d",&temp[0]);
-    puts("input port 2");
+    printf("input port 2 : ");
     scanf("%d",&temp[1]);
     
     (shmaddr+i)->s_port = temp[0];
@@ -286,6 +292,7 @@ void firewall_port_policy_del(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
+    printf("Choice Number : ");
     scanf("%d",&num);
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
@@ -305,8 +312,11 @@ void firewall_port_policy_print(int shm_id){
         exit(1);
     }
     while((shmaddr+i)->s_port != -1){
-        printf("%d %d\n",(shmaddr+i)->s_port,(shmaddr+i)->e_port);
+        printf("%d) %d %d\n",i+1,(shmaddr+i)->s_port,(shmaddr+i)->e_port);
         i++;
+    }
+    if(i==0){
+	puts("Empty Port list");
     }
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
@@ -314,8 +324,27 @@ void firewall_port_policy_print(int shm_id){
     }
 }
 
-int firewall_ip(int shmid){
+int firewall_ip(struct ip *header,int shmid){
     
+    int i=0;
+    struct fire_ip *shmaddr;
+    if((shmaddr=shmat(shmid, (void *)0, 0)) == (void *)-1) {
+        perror(SHMAT_FAIL);
+        exit(1);
+    }
+    while((shmaddr+i)->domain != -1) {
+        puts(inet_ntoa((shmaddr+i)->addr));
+        puts(inet_ntoa(header->ip_src));
+        if(header->ip_src.s_addr>>(32-(shmaddr+i)->domain) == (shmaddr+i)->addr.s_addr>>(32-(shmaddr+i)->domain)){
+            
+            return 1;
+        }
+        i++;
+    }
+    if(shmdt(shmaddr) == -1) {
+        perror(SHMDT_FAIL);
+        exit(1);
+    }
     return 0;
 }
 int firewall_tcp(struct tcphdr *header,int shmid){
@@ -353,25 +382,24 @@ int firewall_flags(struct tcphdr *tcph,int shmid){
 			
 	}
 }
+
 int firewall(struct packet_st *pt,int *shmid){
-    time_t timer;
     struct tm *t;
+    time_t timer;	
     
-    timer = time(NULL);
-    
+    timer = time(NULL);    
     t = localtime(&timer);
     
     FILE *fp;
     fp = fopen(BLOCK_LOG_FILE_NAME,"a");
     int block=0;
     
-    block+=firewall_ip(shmid[0]);
+    block+=firewall_ip(&pt->rx_iph,shmid[0]);
     block+=firewall_tcp(&pt->rx_tcph,shmid[1]);
-	printf("%d",firewall_flags(&pt->rx_tcph,shmid[2]));
     block+=firewall_flags(&pt->rx_tcph,shmid[2]);
     
     if(block != 0) {
-        fprintf(fp,"%d.%d.%d %d:%d:%d %s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
+        fprintf(fp,"%d.%d.%d %d:%d:%d\t%s %d\n",t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
         
     }
     fclose(fp);
@@ -386,10 +414,22 @@ int firewall_block_list(struct packet_st *pt){
     int t;
     int i=0;
     while(fscanf(fp,"%s %s %s %hd\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
-        (pt+i)->rx_iph.ip_dst.s_addr = inet_addr(temp);
+        (pt+i)->rx_iph.ip_src.s_addr = inet_addr(temp);
         i++;
     }
     fclose(fp);
     return i;
+}
+void firewall_block_list_print() {
+    FILE *fp;
+    char temp[BUFSIZ];
+    fp = fopen(BLOCK_LOG_FILE_NAME,"r");
+    while(fgets(temp,BUFSIZ,fp)!=NULL){
+        temp[strlen(temp)-1] = '\0';
+        puts(temp);
+    }
+    fclose(fp);
+    
+    
 }
 

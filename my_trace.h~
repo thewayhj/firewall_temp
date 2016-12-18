@@ -9,10 +9,10 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include<pthread.h>
-#include<sys/types.h>
-#include<arpa/inet.h>
-#include<time.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <time.h>
 #include <netdb.h>
 
 void sig_alrm(int);
@@ -43,7 +43,7 @@ struct sockaddr_in sasend;
 struct sockaddr_in sarecv;
 struct hostent *host;
 int salen;
-
+int end = 0;
 void my_trace(char *argv) {
 
 	time(&current_time);
@@ -86,14 +86,14 @@ void handlePing(void) {
 
 	signal(SIGALRM, sig_alrm);
 	if((sd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-      printf("socket open error!!\n");
+      printf("socket open error\n");
       exit(-1);
     }
 	
 	while(1){
 		printf("%3d:",ttl);
 		send_msg();
-		alarm(5);
+		alarm(3);
 		isWait = 1;
 		if((len = recvfrom(sd, rbuf, sizeof(rbuf), 0, NULL, NULL)) < 0) {
 			printf("read error\n");
@@ -120,6 +120,8 @@ void handlePing(void) {
 			}	
 			sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 			printf("%s",rbuf);
+            end = 1;
+            break;
 		}	
 	}
 }
@@ -133,9 +135,9 @@ void sig_alrm(int signo) {
 	}
 	printf("%3d:",ttl);
 	miss ++;
-   	send_msg();
-		
-	alarm(5);
+    send_msg();
+    if(end == 0)
+        alarm(5);
 	return;
 }
 void send_msg(void) {
