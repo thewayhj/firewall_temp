@@ -9,10 +9,10 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include<pthread.h>
-#include<sys/types.h>
-#include<arpa/inet.h>
-#include<time.h>
+#include <pthread.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <time.h>
 #include <netdb.h>
 
 void sig_alrm(int);

@@ -235,13 +235,9 @@ void read_packet_file(int *shmid){
         int t = firewall(pt_st+k, shmid);
         
         if(t&1){
-<<<<<<< HEAD
             
             printf("IP block\n\n");
             
-=======
-            printf("IP block\n");
->>>>>>> 56a6b18a82710e416250b1c7891024daa4956419
         }
         if(t&2) {
             

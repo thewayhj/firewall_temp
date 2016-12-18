@@ -391,7 +391,7 @@ int firewall(struct packet_st *pt,int *shmid){
     block+=firewall_flags(&pt->rx_tcph,shmid[2]);
     
     if(block != 0) {
-        fprintf(fp,"%d.%d.%d %d:%d:%d %s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
+        fprintf(fp,"%d.%d.%d %d:%d:%d\t%s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
         
     }
     fclose(fp);
@@ -411,5 +411,17 @@ int firewall_block_list(struct packet_st *pt){
     }
     fclose(fp);
     return i;
+}
+void firewall_block_list_print() {
+    FILE *fp;
+    char temp[BUFSIZ];
+    fp = fopen(BLOCK_LOG_FILE_NAME,"r");
+    while(fgets(temp,BUFSIZ,fp)!=NULL){
+        temp[strlen(temp)-1] = '\0';
+        puts(temp);
+    }
+    fclose(fp);
+    
+    
 }
 
