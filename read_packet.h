@@ -8,8 +8,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-void print_ip(struct ip *);
-void print_tcp(struct tcphdr *);
+void print_ip(struct ip *); //ip header
+void print_tcp(struct tcphdr *); // tcp header
 
 int read_packet(){
 	int sd;
@@ -52,20 +52,20 @@ void print_ip(struct ip *iph){
     puts("[IP HEADER]");
     printf("VER : %d HL : %u TOS : %d TOL: %d \n",iph->ip_v, iph->ip_hl,iph->ip_tos, iph->ip_len);
     printf("ID : %d TTL: %d Protocol : %u CheckSum = %d\n",iph->ip_id, iph->ip_ttl,iph->ip_sum,iph->ip_p);
-	printf("SRC IP: %s ", inet_ntoa(*(struct in_addr *)&iph->ip_src));
-	printf("DST IP: %s \n", inet_ntoa(*(struct in_addr *)&iph->ip_dst));
-    
+	printf("SRC IP: %s ", inet_ntoa(iph->ip_src));
+	printf("DST IP: %s \n", inet_ntoa(iph->ip_dst));    
 }
 
 void print_tcp(struct tcphdr *tcph){
     puts("[TCP HEADER]");
 	printf("SRC PORT: %d DST PORT : %d\n",tcph->th_sport, tcph->th_dport);
-
+	printf("Flags : ");
 	(tcph->th_flags&TH_URG)?printf("U"):printf("-");
 	(tcph->th_flags&TH_ACK)?printf("A"):printf("-");
 	(tcph->th_flags&TH_PUSH)?printf("P"):printf("-");
 	(tcph->th_flags&TH_RST)?printf("R"):printf("-");
 	(tcph->th_flags&TH_SYN)?printf("S"):printf("-");
 	(tcph->th_flags&TH_FIN)?printf("F"):printf("-");
-	printf("\n\n");
+	printf("\n");
+	printf("Data : ");
 }

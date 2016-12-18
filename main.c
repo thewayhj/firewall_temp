@@ -16,8 +16,6 @@
 #include "my_trace.h"
 #include "firewall.h"
 
-
-
 int print_menu(){
     
     char choice=0;
@@ -32,6 +30,7 @@ int print_menu(){
     scanf(" %c",&choice);
     switch (choice) {
         case '0':
+	    printf("Exit Program\n");
             exit(0);
             break;
         case '1':
@@ -200,14 +199,13 @@ int main(){
                     break;
                 default:
                     break;
-            }
-            
+            }            
         }
     }
     // child proccess
     else if(pid == 0) {
         
-        read_packet();
+       // read_packet();
         
     }
     else {
@@ -215,7 +213,5 @@ int main(){
         
         
     }
-    
-    
+        
 }
-

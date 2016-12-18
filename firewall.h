@@ -14,7 +14,7 @@
 #define SHMDT_FAIL "shmdt failed"
 
 #ifdef HEE
-#define PATH ""
+#define PATH "/home/hello/lsp/network/term/firewall_temp/"
 #else
 #define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
 #endif

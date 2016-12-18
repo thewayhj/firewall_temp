@@ -10,7 +10,7 @@
 #define read_packet_file_h
 
 #ifdef HEE
-#define PATH ""
+#define PATH "/home/hello/lsp/network/term/firewall_temp/"
 #else
 #define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
 #endif
@@ -110,7 +110,7 @@ void read_packet_file(){
                     strcat(temp2,temp);
                     temp = strtok(NULL,"|");
                     strcat(temp2,temp);
-                    rx_iph.ip_src.s_addr = (int)strtol(temp2,NULL,16);
+                    rx_iph.ip_src.s_addr = htonl((int)strtol(temp2,NULL,16));
                     
                     temp = strtok(NULL,"|");
                     strcpy(temp2,temp);
@@ -120,7 +120,7 @@ void read_packet_file(){
                     strcat(temp2,temp);
                     temp = strtok(NULL,"|");
                     strcat(temp2,temp);
-                    rx_iph.ip_dst.s_addr = (int)strtol(temp2,NULL,16);
+                    rx_iph.ip_dst.s_addr = htonl((int)strtol(temp2,NULL,16));
                     
                     while(j < rx_iph.ip_hl*4){
                         strtok(NULL,"|");
