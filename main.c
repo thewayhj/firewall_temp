@@ -50,6 +50,93 @@ int print_menu(){
                 case '1':
                     return 11;
                     break;
+                case '2':
+                    return 12;
+                    break;
+                case '3':
+                    puts("\n=== Firewall Policy ===");
+                    puts("| 1. IP               |");
+                    puts("| 2. PORT             |");
+                    puts("| 3. FLAGS            |");
+                    puts("| 0. Back             |");
+                    puts("=======================");
+                    printf("Choice Number : ");
+                    scanf(" %c",&choice);
+                    switch (choice) {
+                        case '1':
+                            puts("\n==== IP =====");
+                            puts("| 1. ADD    |");
+                            puts("| 2. DELETE |");
+                            puts("| 3. DISPLAY|");
+                            puts("| 0. MENU   |");
+                            puts("=============");
+                            printf("Choice Number : ");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1311;
+                                    break;
+                                case '2':
+                                    return 1312;
+                                    break;
+                                case '3':
+                                    return 1313;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case '2':
+                            puts("\n==== PORT =====");
+                            puts("| 1. ADD      |");
+                            puts("| 2. DELETE   |");
+                            puts("| 3. DISPLAY  |");
+                            puts("| 0. MENU     |");
+                            puts("===============");
+                            printf("Choice Number : ");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1321;
+                                    break;
+                                case '2':
+                                    return 1322;
+                                    break;
+                                case '3':
+                                    return 1233;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
+                            break;
+                        case '3':
+                            puts("\n===== FLAGS ======");
+                            puts("| 1. ADD         |");
+                            puts("| 2. DELETE      |");
+                            puts("| 3. LOOK        |");
+                            puts("| 0. MENU        |");
+                            puts("==================");
+                            printf("Choice Number : ");
+                            scanf(" %c",&choice);
+                            switch (choice) {
+                                case '1':
+                                    return 1331;
+                                    break;
+                                case '2':
+                                    return 1332;
+                                    break;
+                                case '3':
+                                    return 1333;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
             }
             break;
         case '2':
@@ -57,7 +144,7 @@ int print_menu(){
             puts("| 1. Input            |");
             puts("| 2. Packet IP list   |");
             puts("| 3. Block IP list    |");
-            puts("| 4.                  |");
+            puts("| 4. History          |");
             puts("| 0. back             |");
             puts("=======================");
             scanf(" %c",&choice);
@@ -78,90 +165,8 @@ int print_menu(){
             
             
         case '3':
-            puts("\n=== Firewall Policy ===");
-            puts("| 1. IP               |");
-            puts("| 2. PORT             |");
-            puts("| 3. FLAGS            |");
-            puts("| 0. MENU             |");
-            puts("=======================");
-            printf("Choice Number : ");
-            scanf(" %c",&choice);
-            switch (choice) {
-                case '1':
-                    puts("\n==== IP =====");
-                    puts("| 1. ADD    |");
-                    puts("| 2. DELETE |");
-                    puts("| 3. LOOK   |");
-                    puts("| 0. MENU   |");
-                    puts("=============");
-                    printf("Choice Number : ");
-                    scanf(" %c",&choice);
-                    switch (choice) {
-                        case '1':
-                            return 1311;
-                            break;
-                        case '2':
-                            return 1312;
-                            break;
-                        case '3':
-                            return 1313;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                case '2':
-                    puts("\n==== PORT =====");
-                    puts("| 1. ADD      |");
-                    puts("| 2. DELETE   |");
-                    puts("| 3. LOOK     |");
-                    puts("| 0. MENU     |");
-                    puts("===============");
-                    printf("Choice Number : ");
-                    scanf(" %c",&choice);
-                    switch (choice) {
-                        case '1':
-                            return 1321;
-                            break;
-                        case '2':
-                            return 1322;
-                            break;
-                        case '3':
-                            return 1233;
-                            break;
-                        default:
-                            break;
-                    }
-                    
-                    break;
-                case '3':
-                    puts("\n===== FLAGS ======");
-                    puts("| 1. ADD         |");
-                    puts("| 2. DELETE      |");
-                    puts("| 3. LOOK        |");
-                    puts("| 0. MENU        |");
-                    puts("==================");
-                    printf("Choice Number : ");
-                    scanf(" %c",&choice);
-                    switch (choice) {
-                        case '1':
-                            return 1331;
-                            break;
-                        case '2':
-                            return 1332;
-                            break;
-                        case '3':
-                            return 1333;
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
             
-            
+            break;
         default:
             break;
     }
@@ -186,6 +191,9 @@ int main(){
             switch (print_menu()) {
                 case 11:
                     read_packet_file(shmid);
+                    break;
+                case 12:
+                    firewall_block_list_print();
                     break;
                 case 21:
                     scanf("%s",input);
