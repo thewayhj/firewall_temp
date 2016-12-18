@@ -43,7 +43,7 @@ struct sockaddr_in sasend;
 struct sockaddr_in sarecv;
 struct hostent *host;
 int salen;
-
+int end = 0;
 void my_trace(char *argv) {
 
 	time(&current_time);
@@ -120,6 +120,8 @@ void handlePing(void) {
 			}	
 			sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 			printf("%s",rbuf);
+            end = 1;
+            break;
 		}	
 	}
 }
@@ -133,9 +135,9 @@ void sig_alrm(int signo) {
 	}
 	printf("%3d:",ttl);
 	miss ++;
-   	send_msg();
-		
-	alarm(5);
+    send_msg();
+    if(end == 0)
+        alarm(5);
 	return;
 }
 void send_msg(void) {
