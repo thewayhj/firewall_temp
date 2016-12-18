@@ -26,7 +26,7 @@ struct packet_st{
 
 #include <netinet/ip.h>
 #include <stdlib.h>
-void read_packet_file(){
+void read_packet_file(int *shmid){
     FILE *fp;
     char packet[BUFSIZ];
     char *temp;
@@ -213,7 +213,26 @@ void read_packet_file(){
         
         (pt_st+k)->rx_iph = rx_iph;
         (pt_st+k)->rx_tcph = rx_tcph;
+        
+        int t= firewall(pt_st+k, shmid);
+        
+        if(t&1){
+            
+            printf("IP block\n");
+            
+        }
+        else if(t&2) {
+            
+            printf("PORT block\n");
+        }
+        else if(t&4) {
+            
+            printf("FLAGS block\n");
+        }
         k++;
+        
+        
+        
     }
 }
 #endif /* read_packet_file_h */

@@ -21,6 +21,7 @@
 #define IP_POLICY_FILE_NAME PATH"firewall_policy_ip_list"
 #define PORT_POLICY_FILE_NAME PATH"firewall_policy_port_list"
 #define FLAGS_POLICY_FILE_NAME PATH"firewall_policy_flag_list"
+#define BLOCK_LOG_FILE_NAME PATH"block_packet"
 #ifndef firewall_h
 #define firewall_h
 
@@ -313,11 +314,11 @@ void firewall_port_policy_print(int shm_id){
     }
 }
 
-void firewall_ip(int shmid){
+int firewall_ip(int shmid){
     
-    
+    return 0;
 }
-void firewall_tcp(struct tcphdr *header,int shmid){
+int firewall_tcp(struct tcphdr *header,int shmid){
     int i=0;
     
     struct fire_port *shmaddr;
@@ -325,10 +326,10 @@ void firewall_tcp(struct tcphdr *header,int shmid){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while(shmaddr->s_port != -1) {
+    while((shmaddr+i)->s_port != -1) {
         if((shmaddr+i)->s_port<=header->th_dport && header->th_dport <= (shmaddr+i)->e_port){
             
-            
+            return 2;
         }
         i++;
     }
@@ -336,15 +337,49 @@ void firewall_tcp(struct tcphdr *header,int shmid){
         perror(SHMDT_FAIL);
         exit(1);
     }
-    
+    return 0;
 }
-void firewall_flags(struct tcphdr header,int shmid){
+int firewall_flags(struct tcphdr header,int shmid){
     
     
-    
+    return 0;
 }
-void firewall(struct packet_st *pt,int *shmid){
-    firewall_ip(shmid[0]);
-    firewall_tcp(&pt->rx_tcph,shmid[1]);
-    firewall_flags(pt->rx_tcph,shmid[2]);
+int firewall(struct packet_st *pt,int *shmid){
+    time_t timer;
+    struct tm *t;
+    
+    timer = time(NULL);
+    
+    t = localtime(&timer);
+    
+    FILE *fp;
+    fp = fopen(BLOCK_LOG_FILE_NAME,"a");
+    int block=0;
+    
+    block+=firewall_ip(shmid[0]);
+    block+=firewall_tcp(&pt->rx_tcph,shmid[1]);
+    block+=firewall_flags(pt->rx_tcph,shmid[2]);
+    
+    if(block != 0) {
+        fprintf(fp,"%d.%d.%d %d:%d:%d %s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
+        
+    }
+    fclose(fp);
+    return block;
 }
+int firewall_block_list(struct packet_st *pt){
+    FILE *fp;
+    fp = fopen(BLOCK_LOG_FILE_NAME,"r");
+    char temp[BUFSIZ];
+    char temp2[BUFSIZ];
+    char temp3[BUFSIZ];
+    int t;
+    int i=0;
+    while(fscanf(fp,"%s %s %s %hd\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
+        (pt+i)->rx_iph.ip_dst.s_addr = inet_addr(temp);
+        i++;
+    }
+    fclose(fp);
+    return i;
+}
+
