@@ -26,7 +26,7 @@ struct packet_st{
 
 #include <netinet/ip.h>
 #include <stdlib.h>
-void read_packet_file(){
+void read_packet_file(int *shmid){
     FILE *fp;
     char packet[BUFSIZ];
     char *temp;
@@ -48,7 +48,7 @@ void read_packet_file(){
         atoi(strtok(packet,"|"));
         while(i<4){
             switch (i) {
-                case 0:
+                case 0: // ethernet
                     strtok(NULL,"|");
                     strtok(NULL,"|");
                     strtok(NULL,"|");
@@ -65,7 +65,7 @@ void read_packet_file(){
                     strtok(NULL,"|");
                     strtok(NULL,"|");
                     break;
-                case 1:
+                case 1: // ip header
                     
                     temp = strtok(NULL,"|");
                     
@@ -128,7 +128,7 @@ void read_packet_file(){
                     }
                     print_ip(&rx_iph);
                     break;
-                case 2:
+                case 2: // tcp header
                     temp = strtok(NULL,"|");
                     strcpy(temp2,temp);
                     temp = strtok(NULL,"|");
@@ -200,7 +200,7 @@ void read_packet_file(){
                     }
                     print_tcp(&rx_tcph);
                     break;
-                case 3:
+                case 3: // data
                     strcpy(temp2,"");
                     while((temp = strtok(NULL,"|"))!=NULL){
                         strcat(temp2,temp);
@@ -213,7 +213,26 @@ void read_packet_file(){
         
         (pt_st+k)->rx_iph = rx_iph;
         (pt_st+k)->rx_tcph = rx_tcph;
+        
+        int t= firewall(pt_st+k, shmid);
+        
+        if(t&1){
+            
+            printf("IP block\n\n");
+            
+        }
+        if(t&2) {
+            
+            printf("PORT block\n\n");
+        }
+        if(t&4) {
+            
+            printf("FLAGS block\n\n");
+        }
         k++;
+        
+        
+        
     }
 }
 #endif /* read_packet_file_h */

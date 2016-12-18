@@ -26,7 +26,7 @@ int print_menu(){
     puts("| 4.            |");
     puts("| 0. exit       |");
     puts("=================");
-    printf("Choice Number : ");	
+    printf("Choice Number : ");
     scanf(" %c",&choice);
     switch (choice) {
         case '0':
@@ -34,129 +34,144 @@ int print_menu(){
             exit(0);
             break;
         case '1':
-	    puts("\n====== Firewall =======");
+            puts("\n====== Firewall =======");
             puts("| 1. Read Packet File |");
             puts("| 2. Block list       |");
             puts("| 3. Firewall Policy  |");
             puts("| 4.                  |");
             puts("| 0. back             |");
-    	    puts("=======================");
+            puts("=======================");
             printf("Choice Number : ");
             scanf(" %c",&choice);
             switch (choice) {
                 case '0':
-		    return print_menu();
+                    return print_menu();
                 case '1':
                     return 11;
                     break;
-		case '2':
-		    return 12; // block list
-
-
-
+            }
+            break;
+        case '2':
+            puts("\n====== Traceroute =======");
+            puts("| 1. Input              |");
+            puts("| 2. Packet IP list     |");
+            puts("| 3. Block IP list      |");
+            puts("| 4.                    |");
+            puts("| 0. back               |");
+            puts("=========================");
+	printf("Choice Number : ");
+            scanf(" %c",&choice);
+            switch (choice) {
+                case '1':
+                    return 21;
+                    break;
+                case '2':
+                    return 22;
+                    break;
                 case '3':
-		    puts("\n=== Firewall Policy ===");
-                    puts("| 1. IP               |");
-                    puts("| 2. PORT             |");
-                    puts("| 3. FLAGS            |");
-                    puts("| 0. MENU             |");
-		    puts("=======================");
-		    printf("Choice Number : ");
+                    return 23;
+                    break;
+                default:
+                    break;
+            }// block list
+            break;
+            
+            
+        case '3':
+            puts("\n=== Firewall Policy ===");
+            puts("| 1. IP               |");
+            puts("| 2. PORT             |");
+            puts("| 3. FLAGS            |");
+            puts("| 0. MENU             |");
+            puts("=======================");
+            printf("Choice Number : ");
+            scanf(" %c",&choice);
+            switch (choice) {
+                case '1':
+                    puts("\n==== IP =====");
+                    puts("| 1. ADD    |");
+                    puts("| 2. DELETE |");
+                    puts("| 3. LOOK   |");
+                    puts("| 0. MENU   |");
+                    puts("=============");
+                    printf("Choice Number : ");
                     scanf(" %c",&choice);
                     switch (choice) {
                         case '1':
-			    puts("\n==== IP =====");
-                            puts("| 1. ADD    |");
-                            puts("| 2. DELETE |");
-                            puts("| 3. LOOK   |");
-                            puts("| 0. MENU   |");
-			    puts("=============");
-			    printf("Choice Number : ");
-                            scanf(" %c",&choice);
-                            switch (choice) {
-                                case '1':
-                                    return 1311;
-                                    break;
-                                case '2':
-                                    return 1312;
-                                    break;
-                                case '3':
-                                    return 1313;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            return 1311;
                             break;
                         case '2':
-			    puts("\n==== PORT =====");
-                            puts("| 1. ADD      |");
-                            puts("| 2. DELETE   |");
-                            puts("| 3. LOOK     |");
-                            puts("| 0. MENU     |");
-			    puts("===============");
-			    printf("Choice Number : ");
-                            scanf(" %c",&choice);
-                            switch (choice) {
-                                case '1':
-                                    return 1321;
-                                    break;
-                                case '2':
-                                    return 1322;
-                                    break;
-                                case '3':
-                                    return 1233;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            
+                            return 1312;
                             break;
                         case '3':
-			    puts("\n===== FLAGS ======");
-                            puts("| 1. ADD         |");
-                            puts("| 2. DELETE      |");
-                            puts("| 3. LOOK        |");
-                            puts("| 0. MENU        |");
-			    puts("==================");
-			    printf("Choice Number : ");
-                            scanf(" %c",&choice);
-                            switch (choice) {
-                                case '1':
-                                    return 1331;
-                                    break;
-                                case '2':
-                                    return 1332;
-                                    break;
-                                case '3':
-                                    return 1333;
-                                    break;
-                                default:
-                                    break;
-                            }
+                            return 1313;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case '2':
+                    puts("\n==== PORT =====");
+                    puts("| 1. ADD      |");
+                    puts("| 2. DELETE   |");
+                    puts("| 3. LOOK     |");
+                    puts("| 0. MENU     |");
+                    puts("===============");
+                    printf("Choice Number : ");
+                    scanf(" %c",&choice);
+                    switch (choice) {
+                        case '1':
+                            return 1321;
+                            break;
+                        case '2':
+                            return 1322;
+                            break;
+                        case '3':
+                            return 1233;
                             break;
                         default:
                             break;
                     }
                     
-                    
+                    break;
+                case '3':
+                    puts("\n===== FLAGS ======");
+                    puts("| 1. ADD         |");
+                    puts("| 2. DELETE      |");
+                    puts("| 3. LOOK        |");
+                    puts("| 0. MENU        |");
+                    puts("==================");
+                    printf("Choice Number : ");
+                    scanf(" %c",&choice);
+                    switch (choice) {
+                        case '1':
+                            return 1331;
+                            break;
+                        case '2':
+                            return 1332;
+                            break;
+                        case '3':
+                            return 1333;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
-            break;
-        case '2':
-            return 2;
-            break;
+            
             
         default:
-            puts("wrong input");
             break;
     }
-    
     return 0;
 }
-
 int main(){
     
+    int count=0;
+    char input[BUFSIZ];
+    int choice;
     pid_t pid;
     pid = fork();
     int shmid[3];
@@ -170,10 +185,27 @@ int main(){
         while(1){
             switch (print_menu()) {
                 case 11:
-                    read_packet_file();
+                    read_packet_file(shmid);
                     break;
-                case 2:
-                    my_trace("www.google.com");
+                case 21:
+                    scanf("%s",input);
+                    my_trace(input);
+                    break;
+                case 22:
+                    
+                    break;
+                    
+                case 23:
+                    count=firewall_block_list(pt);
+                    while(i<count) {
+                     
+                        printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_dst));
+                        i++;
+                    }
+		    printf("choice block ip : ");
+                    scanf("%d",&choice);
+                    
+                    my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_dst));
                     break;
                 case 1311:
                     firewall_ip_policy_add(shmid[0]);
@@ -204,9 +236,7 @@ int main(){
     }
     // child proccess
     else if(pid == 0) {
-        
-       // read_packet();
-        
+       // read_packet();        
     }
     else {
         
@@ -214,4 +244,4 @@ int main(){
         
     }
         
-}
+}     
