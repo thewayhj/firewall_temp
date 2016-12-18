@@ -188,6 +188,7 @@ int main(){
                     read_packet_file(shmid);
                     break;
                 case 21:
+		    printf("Enter IP or DNS : ");
                     scanf("%s",input);
                     my_trace(input);
                     break;

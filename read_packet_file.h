@@ -234,27 +234,17 @@ void read_packet_file(int *shmid){
         packet_log_write(pt_st+k);
         int t = firewall(pt_st+k, shmid);
         
-        if(t&1){
-<<<<<<< HEAD
-            
-            printf("IP block\n\n");
-            
-=======
+        if(t&1){            
             printf("IP block\n");
->>>>>>> 56a6b18a82710e416250b1c7891024daa4956419
         }
-        if(t&2) {
-            
-            printf("PORT block\n\n");
+        if(t&2) {            
+            printf("PORT block\n");
         }
-        if(t&4) {
-            
-            printf("FLAGS block\n\n");
+        if(t&4) {            
+            printf("FLAGS block\n");
         }
-        k++;
-        
-        
-        
+	printf("\n");
+        k++;       
     }
 }
 #endif /* read_packet_file_h */
