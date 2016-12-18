@@ -169,8 +169,9 @@ int print_menu(){
 }
 int main(){
     
-    
+    int count=0;
     char input[BUFSIZ];
+    int choice;
     pid_t pid;
     pid = fork();
     int shmid[3];
@@ -184,7 +185,7 @@ int main(){
         while(1){
             switch (print_menu()) {
                 case 11:
-                    read_packet_file();
+                    read_packet_file(shmid);
                     break;
                 case 21:
                     scanf("%s",input);
@@ -192,6 +193,18 @@ int main(){
                     break;
                 case 22:
                     
+                    break;
+                    
+                case 23:
+                    count=firewall_block_list(pt);
+                    while(i<count) {
+                     
+                        printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_dst));
+                        i++;
+                    }
+                    scanf("%d",&choice);
+                    
+                    my_trace(inet_ntoa((pt+i-1)->rx_iph.ip_dst));
                     break;
                 case 1311:
                     firewall_ip_policy_add(shmid[0]);
