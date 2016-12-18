@@ -93,7 +93,7 @@ void handlePing(void) {
 	while(1){
 		printf("%3d:",ttl);
 		send_msg();
-		alarm(5);
+		alarm(3);
 		isWait = 1;
 		if((len = recvfrom(sd, rbuf, sizeof(rbuf), 0, NULL, NULL)) < 0) {
 			printf("read error\n");
