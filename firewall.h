@@ -29,7 +29,7 @@
 #endif /* firewall_h */
 
 struct fire_ip{
-    u_long addr;
+    struct in_addr addr;
     int domain;
 };
 
@@ -75,7 +75,7 @@ int firewall_ip_policy_load(int key_num){
         struct fire_ip fip;
         
         fip.domain = domain;
-        fip.addr = inet_addr(temp);
+        fip.addr.s_addr = inet_addr(temp);
         
         *(shmaddr+i++) = fip;
         
@@ -83,7 +83,7 @@ int firewall_ip_policy_load(int key_num){
     struct fire_ip fip;
     
     fip.domain = -1;
-    fip.addr = -1;
+    fip.addr.s_addr = -1;
     
     *(shmaddr+i++) = fip;
     if(shmdt(shmaddr) == -1) {
@@ -100,8 +100,8 @@ void firewall_ip_policy_print(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
-        printf("%d.%lu %d\n",i+1,(shmaddr+i)->addr,(shmaddr+i)->domain);
+    while((shmaddr+i)->addr.s_addr != -1) {
+        printf("%d.%u %d\n",i+1,(shmaddr+i)->addr.s_addr,(shmaddr+i)->domain);
         i++;
     }
     if(shmdt(shmaddr) == -1) {
@@ -119,7 +119,7 @@ void firewall_ip_policy_add(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
+    while((shmaddr+i)->addr.s_addr != -1) {
         i++;
     }
     
@@ -128,10 +128,10 @@ void firewall_ip_policy_add(int shm_id){
     puts("input domain");
     scanf("%d",&temp);
     
-    (shmaddr+i)->addr = inet_addr(input);
+    (shmaddr+i)->addr.s_addr = inet_addr(input);
     (shmaddr+i)->domain = temp;
     i++;
-    (shmaddr+i)->addr = -1;
+    (shmaddr+i)->addr.s_addr = -1;
     (shmaddr+i)->domain = -1;
     
     if(shmdt(shmaddr) == -1) {
@@ -150,7 +150,7 @@ void firewall_ip_policy_del(int shm_id){
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
     }
-    while((shmaddr+num++)->addr != -1);
+    while((shmaddr+num++)->addr.s_addr != -1);
     
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
@@ -211,7 +211,7 @@ void firewall_ip_policy_write(int shm_id){
         perror(SHMAT_FAIL);
         exit(1);
     }
-    while((shmaddr+i)->addr != -1) {
+    while((shmaddr+i)->addr.s_addr != -1) {
         fprintf(fp,"%lu %d\n",(shmaddr+i)->addr,(shmaddr+i)->domain);
         i++;
     }
@@ -314,8 +314,29 @@ void firewall_port_policy_print(int shm_id){
     }
 }
 
-int firewall_ip(int shmid){
+int firewall_ip(struct ip *header,int shmid){
     
+    int i=0;
+    struct fire_ip *shmaddr;
+    if((shmaddr=shmat(shmid, (void *)0, 0)) == (void *)-1) {
+        perror(SHMAT_FAIL);
+        exit(1);
+    }
+    while((shmaddr+i)->domain != -1) {
+        puts(inet_ntoa((shmaddr+i)->addr));
+        puts(inet_ntoa(header->ip_src));
+        if(header->ip_src.s_addr>>(32-(shmaddr+i)->domain) == (shmaddr+i)->addr.s_addr>>(32-(shmaddr+i)->domain)){
+            
+            return 1;
+        }
+        i++;
+    }
+    if(shmdt(shmaddr) == -1) {
+        perror(SHMDT_FAIL);
+        exit(1);
+    }
+    return 0;
+
     return 0;
 }
 int firewall_tcp(struct tcphdr *header,int shmid){
@@ -356,7 +377,7 @@ int firewall(struct packet_st *pt,int *shmid){
     fp = fopen(BLOCK_LOG_FILE_NAME,"a");
     int block=0;
     
-    block+=firewall_ip(shmid[0]);
+    block+=firewall_ip(&pt->rx_iph,shmid[0]);
     block+=firewall_tcp(&pt->rx_tcph,shmid[1]);
     block+=firewall_flags(pt->rx_tcph,shmid[2]);
     
@@ -376,7 +397,7 @@ int firewall_block_list(struct packet_st *pt){
     int t;
     int i=0;
     while(fscanf(fp,"%s %s %s %hd\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
-        (pt+i)->rx_iph.ip_dst.s_addr = inet_addr(temp);
+        (pt+i)->rx_iph.ip_src.s_addr = inet_addr(temp);
         i++;
     }
     fclose(fp);
