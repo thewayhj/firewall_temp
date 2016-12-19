@@ -1,11 +1,3 @@
-//
-//  main.c
-//  firewall_temp
-//
-//  Created by ParkMinwoo on 2016. 12. 11..
-//  Copyright © 2016년 ParkMinwoo. All rights reserved.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ipc.h>
@@ -119,9 +111,9 @@ int print_menu(){
         case '2':
             puts("\n====== Traceroute =======");
             puts("| 1. Input              |");
-            puts("| 2. Packet IP list     |");
-            puts("| 3. Block IP list      |");
-            puts("| 4. History            |");
+           // puts("| 2. Packet IP list     |");
+            puts("| 2. Block IP list      |");
+           // puts("| 4. History            |");
             puts("| 0. Menu               |");
             puts("=========================");
 	printf("Choice Number : ");
@@ -135,12 +127,12 @@ int print_menu(){
                 case '2':
                     return 22;
                     break;
-                case '3':
+              /*  case '3':
                     return 23;
                     break;
 		case '4':
 		    return 24;
-		    break;
+		    break;*/
                 default:
 		    puts("Wrong input");
                     break;
@@ -183,13 +175,13 @@ int main(){
                     scanf("%s",input);
                     my_trace(input);
                     break;
+             /*   case 22:
+                    
+                    break;*/
+                    
                 case 22:
-                    
-                    break;
-                    
-                case 23:
                     count=firewall_block_list(pt);
-		    //i=0;
+		    i=0;
                     while(i<count) {
                         printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_dst));
                         i++;
@@ -199,6 +191,9 @@ int main(){
                     
                     my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_dst));
                     break;
+		/*case 24:
+
+		    break;*/
 
                 case 1311:
                     firewall_ip_policy_add(shmid[0]);

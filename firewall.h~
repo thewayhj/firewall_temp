@@ -1,14 +1,6 @@
-//
-//  firewall.h
-//  firewall_temp
-//
-//  Created by ParkMinwoo on 2016. 12. 11..
-//  Copyright © 2016년 ParkMinwoo. All rights reserved.
-//
-
 #include <sys/ipc.h>
 #include <sys/shm.h>
-
+#include "ipTable.h"
 #define SHMID_FAIL "shmid failed"
 #define SHMAT_FAIL "shmat failed"
 #define SHMDT_FAIL "shmdt failed"
@@ -131,7 +123,7 @@ void firewall_ip_policy_add(int shm_id){
     scanf("%s",input);
     printf("input domain : ");
     scanf("%d",&temp);
-    
+    addip(input);//ip drop
     (shmaddr+i)->addr.s_addr = inet_addr(input);
     (shmaddr+i)->domain = temp;
     i++;
@@ -144,6 +136,7 @@ void firewall_ip_policy_add(int shm_id){
     }
     puts("Register IP");
 }
+
 void firewall_ip_policy_del(int shm_id){
     struct fire_ip *shmaddr;
     int num;
@@ -153,7 +146,9 @@ void firewall_ip_policy_del(int shm_id){
     }
     printf("Choice Number : ");
     scanf("%d",&num);
+	delip(inet_ntoa((shmaddr+num-1)->addr));//ip open
     do {
+	
         *(shmaddr+num-1) = *(shmaddr+num);
     }
     while((shmaddr+num++)->addr.s_addr != -1);
@@ -279,6 +274,7 @@ void firewall_port_policy_add(int shm_id){
     printf("input port 2 : ");
     scanf("%d",&temp[1]);
     
+	addport(temp[0],temp[1]);//port drop
     (shmaddr+i)->s_port = temp[0];
     (shmaddr+i)->e_port = temp[1];
     i++;
@@ -299,6 +295,7 @@ void firewall_port_policy_del(int shm_id){
     }
     printf("Choice Number : ");
     scanf("%d",&num);
+	delport((shmaddr+num-1)->s_port,(shmaddr+num-1)->e_port);//port drop
     do {
         *(shmaddr+num-1) = *(shmaddr+num);
     }
@@ -416,7 +413,7 @@ int firewall_block_list(struct packet_st *pt){
     char temp3[BUFSIZ];
     int t;
     int i=0;
-    while(fscanf(fp,"%s %s %s %d\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
+    while(fscanf(fp,"%s %s %s %hd\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
         (pt+i)->rx_iph.ip_src.s_addr = inet_addr(temp);
         i++;
     }
@@ -433,4 +430,5 @@ void firewall_block_list_print() {
     }
     fclose(fp);    
 }
+
 

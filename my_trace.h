@@ -125,12 +125,13 @@ void handlePing(void) {
            		break;
 		}
 	}
+	signal(SIGALRM,SIG_IGN);
 }
 void sig_alrm(int signo) {
 	printf("\tNo reply\n");
 	if(ttl>hops){
 		printf("   Too many hops\n");
-		sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
+		sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-2);
 		printf("%s",rbuf);
 		//exit(0);
 	}
