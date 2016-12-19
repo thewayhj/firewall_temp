@@ -102,7 +102,7 @@ void firewall_ip_policy_print(int shm_id){
         exit(1);
     }
     while((shmaddr+i)->addr.s_addr != -1) {
-        printf("%d.%u %d\n",i+1,(shmaddr+i)->addr.s_addr,(shmaddr+i)->domain);
+        printf("%d. %s %d\n",i+1,inet_ntoa((shmaddr+i)->addr),(shmaddr+i)->domain);
         i++;
     }
     if(i==0){
@@ -142,6 +142,7 @@ void firewall_ip_policy_add(int shm_id){
         perror(SHMDT_FAIL);
         exit(1);
     }
+    puts("Register IP");
 }
 void firewall_ip_policy_del(int shm_id){
     struct fire_ip *shmaddr;
@@ -161,6 +162,7 @@ void firewall_ip_policy_del(int shm_id){
         perror(SHMDT_FAIL);
         exit(1);
     }
+    puts("Delete IP");
 }
 int firewall_port_policy_load(int key_num){
     FILE *fp;
@@ -205,8 +207,7 @@ int firewall_port_policy_load(int key_num){
 }
 void firewall_policy_write(int *shmid){
     firewall_ip_policy_write(shmid[0]);
-    firewall_port_policy_write(shmid[1]);
-    
+    firewall_port_policy_write(shmid[1]);    
 }
 void firewall_ip_policy_write(int shm_id){
     FILE *fp;
@@ -217,13 +218,14 @@ void firewall_ip_policy_write(int shm_id){
         exit(1);
     }
     while((shmaddr+i)->addr.s_addr != -1) {
-        fprintf(fp,"%lu %d\n",(shmaddr+i)->addr,(shmaddr+i)->domain);
+        fprintf(fp,"%s %d\n",inet_ntoa((shmaddr+i)->addr),(shmaddr+i)->domain);
         i++;
     }
     if(shmdt(shmaddr) == -1) {
         perror(SHMDT_FAIL);
         exit(1);
     }
+    fclose(fp);
 }
 void firewall_port_policy_write(int shm_id){
     FILE *fp;
@@ -426,8 +428,6 @@ void firewall_block_list_print() {
         temp[strlen(temp)-1] = '\0';
         puts(temp);
     }
-    fclose(fp);
-    
-    
+    fclose(fp);    
 }
 

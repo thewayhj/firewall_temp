@@ -22,7 +22,7 @@ int print_menu(){
     puts("\n====== MENU =====");
     puts("| 1. Firewall   |");
     puts("| 2. Traceroute |");
-    puts("| 0. exit       |");
+    puts("| 0. Exit       |");
     puts("=================");
     printf("Choice Number : ");
     scanf(" %c",&choice);
@@ -36,7 +36,7 @@ int print_menu(){
             puts("| 1. Read Packet File |");
             puts("| 2. Block list       |");
             puts("| 3. Firewall Policy  |");
-            puts("| 0. back             |");
+            puts("| 0. Back             |");
             puts("=======================");
             printf("Choice Number : ");
             scanf(" %c",&choice);
@@ -53,7 +53,7 @@ int print_menu(){
                     puts("\n=== Firewall Policy ===");
                     puts("| 1. IP               |");
                     puts("| 2. PORT             |");
-                    puts("| 0. Back             |");
+                    puts("| 0. MENU             |");
                     puts("=======================");
                     printf("Choice Number : ");
                     scanf(" %c",&choice);
@@ -119,7 +119,7 @@ int print_menu(){
             puts("| 2. Packet IP list   |");
             puts("| 3. Block IP list    |");
             puts("| 4. History          |");
-            puts("| 0. back             |");
+            puts("| 0. Menu             |");
             puts("=======================");
 	printf("Choice Number : ");
             scanf(" %c",&choice);
@@ -169,9 +169,11 @@ int main(){
         while(1){
             switch (print_menu()) {
                 case 11:
+		    puts("\n<<Read Packet File>>\n");
                     read_packet_file(shmid);
                     break;
                 case 12:
+		    puts("\n\t     << Block List >>");
                     firewall_block_list_print();
                     break;
                 case 21:
@@ -195,6 +197,7 @@ int main(){
                     
                     my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_dst));
                     break;
+
                 case 1311:
                     firewall_ip_policy_add(shmid[0]);
                     firewall_ip_policy_write(shmid[0]);
@@ -220,6 +223,7 @@ int main(){
                     firewall_port_policy_print(shmid[1]);
                     break;
                 default:
+		    puts("Wrong input");
                     break;
             }            
         }
