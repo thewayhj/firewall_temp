@@ -210,6 +210,7 @@ void firewall_policy_write(int *shmid){
     firewall_port_policy_write(shmid[1]);    
 }
 void firewall_ip_policy_write(int shm_id){
+    int i=0;
     FILE *fp;
     fp = fopen(IP_POLICY_FILE_NAME,"w");
     struct fire_ip *shmaddr;
@@ -228,6 +229,7 @@ void firewall_ip_policy_write(int shm_id){
     fclose(fp);
 }
 void firewall_port_policy_write(int shm_id){
+    int i=0;
     FILE *fp;
     fp = fopen(PORT_POLICY_FILE_NAME,"w");
     struct fire_port *shmaddr;
@@ -244,6 +246,7 @@ void firewall_port_policy_write(int shm_id){
         exit(1);
     }
     fclose(fp);
+    puts("Register Port");
 }
 void fiewall_port_policy_get(int shmid){
     struct fire_port *shmaddr;

@@ -210,6 +210,7 @@ void firewall_policy_write(int *shmid){
     firewall_port_policy_write(shmid[1]);    
 }
 void firewall_ip_policy_write(int shm_id){
+    int i=0;
     FILE *fp;
     fp = fopen(IP_POLICY_FILE_NAME,"w");
     struct fire_ip *shmaddr;
@@ -228,8 +229,9 @@ void firewall_ip_policy_write(int shm_id){
     fclose(fp);
 }
 void firewall_port_policy_write(int shm_id){
+    int i=0;
     FILE *fp;
-    fp = fopen(PORT_POLICY_FILE_NAME,"aw");
+    fp = fopen(PORT_POLICY_FILE_NAME,"w");
     struct fire_port *shmaddr;
     if((shmaddr=shmat(shm_id, (void *)0, 0)) == (void *)-1) {
         perror(SHMAT_FAIL);
@@ -244,6 +246,7 @@ void firewall_port_policy_write(int shm_id){
         exit(1);
     }
     fclose(fp);
+    puts("Register Port");
 }
 void fiewall_port_policy_get(int shmid){
     struct fire_port *shmaddr;
@@ -413,7 +416,7 @@ int firewall_block_list(struct packet_st *pt){
     char temp3[BUFSIZ];
     int t;
     int i=0;
-    while(fscanf(fp,"%s %s %s %hd\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
+    while(fscanf(fp,"%s %s %s %d\n",temp3,temp2,temp,&(pt+i)->rx_tcph.th_dport)!=EOF){
         (pt+i)->rx_iph.ip_src.s_addr = inet_addr(temp);
         i++;
     }

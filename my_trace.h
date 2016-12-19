@@ -72,6 +72,7 @@ void my_trace(char *argv) {
 	printf("Dest : %s\n",inet_ntoa(sasend.sin_addr));
 	printf(" Hops\t   Address\t   rtt\n");
 	handlePing();
+	
 }
 
 void handlePing(void) {
@@ -86,9 +87,9 @@ void handlePing(void) {
 
 	signal(SIGALRM, sig_alrm);
 	if((sd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-      printf("socket open error\n");
-      exit(-1);
-    }
+		printf("socket open error\n");
+		exit(-1);
+    	}
 	
 	while(1){
 		printf("%3d:",ttl);
@@ -118,11 +119,11 @@ void handlePing(void) {
 				sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 				printf("%s",rbuf);
 			}	
-			sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
-			printf("%s",rbuf);
-            end = 1;
-            break;
-		}	
+			//sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
+			//printf("%s",rbuf);
+            		end = 1;
+           		break;
+		}
 	}
 }
 void sig_alrm(int signo) {
@@ -131,7 +132,7 @@ void sig_alrm(int signo) {
 		printf("   Too many hops\n");
 		sprintf(rbuf," Resume : hops %d back %d\n",ttl-1,ttl-miss-1);
 		printf("%s",rbuf);
-		exit(0);
+		//exit(0);
 	}
 	printf("%3d:",ttl);
 	miss ++;
