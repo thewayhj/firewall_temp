@@ -7,8 +7,6 @@
 
 #ifdef HEE
 #define PATH "/home/hello/lsp/network/term/firewall_temp/"
-#else
-#define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
 #endif
 #define IP_POLICY_FILE_NAME PATH"firewall_policy_ip_list"
 #define PORT_POLICY_FILE_NAME PATH"firewall_policy_port_list"
@@ -370,14 +368,14 @@ int firewall_tcp(struct tcphdr *header,int shmid){
 }
 int firewall_flags(struct tcphdr *tcph,int shmid){
 	switch(tcph->th_flags){
-		case TH_SYN:
-		case TH_SYN + TH_ACK:
-		case TH_ACK:
-		case TH_FIN:
-		case TH_FIN + TH_ACK:
-		case TH_RST:
+		case TH_SYN: // ----S-
+		case TH_SYN + TH_ACK: // -A--S-
+		case TH_ACK: // -A----
+		case TH_FIN: // -----F
+		case TH_FIN + TH_ACK: // -A---F
+		case TH_RST: // ---R--
 			return 0;
-		default:
+		default: // print FLAGS block
 			return 4;
 			
 	}

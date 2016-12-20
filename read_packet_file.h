@@ -3,8 +3,6 @@
 
 #ifdef HEE
 #define PATH "/home/hello/lsp/network/term/firewall_temp/"
-#else
-#define PATH "/Users/Minwoo/Documents/workspace/git/firewall_temp/"
 #endif
 #define FILE_NAME PATH"sample.txt"
 #define PACKET_LOG_FILE_NAME PATH"packet_log"
@@ -30,7 +28,7 @@ void packet_log_write(struct packet_st *pt){
     fp = fopen(PACKET_LOG_FILE_NAME,"a");
     
     
-    fprintf(fp,"%d.%d.%d %d:%d:%d %s %d\n",t->tm_year+1900,t->tm_mon,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
+    fprintf(fp,"%d.%d.%d %d:%d:%d %s %d\n",t->tm_year+1900,t->tm_mon+1,t->tm_mday,t->tm_hour,t->tm_min,t->tm_sec,inet_ntoa(pt->rx_iph.ip_src),pt->rx_tcph.th_dport);
     
     fclose(fp);
 }

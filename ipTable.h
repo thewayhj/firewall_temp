@@ -3,8 +3,6 @@
 #include <errno.h>   /* errno */
 #include <string.h>  /* strerror */
 
-
-
 FILE        *fp = NULL;
 size_t      readSize = 0;
 char        pszBuff[1024];
@@ -15,9 +13,7 @@ char  fnl[100]=" -j DROP";
 char ip[100] = "-s ";
 char port_1[100] = "-p tcp --sport ";
 char port_2[100] = " --dport ";
-
 char result[100];
-
 
 int addport(int buf1,int buf2){
 	char pbuf_1[10];
@@ -30,8 +26,6 @@ int addport(int buf1,int buf2){
 	sprintf(result, "%s%s%s%s%s%s",ad,port_1,pbuf_1,port_2,pbuf_2,fnl);
 	comp();
 }
-
-
 
 int addip(char buf[]){
 	sprintf(result, "%s%s%s%s",ad,ip,buf,fnl);
@@ -80,8 +74,3 @@ int comp(){
     pszBuff[readSize]=0;
 	printf("%s\n", pszBuff);
 }
-
-
-
-
-

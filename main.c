@@ -35,6 +35,7 @@ int print_menu(){
             switch (choice) {
                 case '0':
                     return print_menu();
+		    break;
                 case '1':
                     return 11;
                     break;
@@ -50,6 +51,9 @@ int print_menu(){
                     printf("Choice Number : ");
                     scanf(" %c",&choice);
                     switch (choice) {
+			case '0':
+			    return print_menu();
+			    break;
                         case '1':
                             puts("\n==== IP =====");
                             puts("| 1. ADD    |");
@@ -60,6 +64,9 @@ int print_menu(){
                             printf("Choice Number : ");
                             scanf(" %c",&choice);
                             switch (choice) {
+				case '0':
+				    return print_menu();
+				    break;
                                 case '1':
                                     return 1311;
                                     break;
@@ -83,6 +90,9 @@ int print_menu(){
                             printf("Choice Number : ");
                             scanf(" %c",&choice);
                             switch (choice) {
+				case '0':
+				    return print_menu();
+				    break;
                                 case '1':
                                     return 1321;
                                     break;
@@ -183,13 +193,13 @@ int main(){
                     count=firewall_block_list(pt);
 		    i=0;
                     while(i<count) {
-                        printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_dst));
-                        i++;
+                        printf("%d)%s\n",i+1,inet_ntoa((pt+i)->rx_iph.ip_src));
+                        i++;  
                     }
 		    printf("choice block ip : ");
                     scanf("%d",&choice);
                     
-                    my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_dst));
+                    my_trace(inet_ntoa((pt+choice-1)->rx_iph.ip_src));
                     break;
 		/*case 24:
 
